@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory</title>
+    <link rel="icon" type="jpeg" href="icon.jpg">
+</head>
+<style>
+      body {
+      margin: 0;
+      padding: 0;
+      width: 80%;
+      margin: 0 auto;
+      background-image: url('fondo.jpg');
+      background-repeat: no-repeat; /* Evita que se repita */
+      background-position: right top; /* Alinea la imagen a la derecha */
+    }
+
+    h1 {
+      font-size: 1.5em;
+      font-weight: normal;
+      text-align: center;
+    }
+
+    #inicio {
+      background-color: rgba(255,255,255,0.5);
+    }
+    #inicio p {
+      font-size: 0.8em;
+    }
+
+    select {
+      width: 3em;
+    }
+
+    button {
+      margin: 0 4px;
+      padding: 5px 10px;
+      border: 0.5px red inset;
+      border-radius: 5%;
+      background-color: ghostwhite;
+      cursor: pointer;
+    }
+
+    #numbers, #reply, #output {
+      text-align: center;
+    }
+
+    #numbers span {
+      display: inline-block;
+      font-size: 2em;
+      margin: 5px;
+      padding: 1px 5px;
+      text-align: center;
+      border: 1px solid red;
+    }
+
+    #reply input {
+      font-size: 2em;
+      width: 2em;
+      margin: 5px;
+      text-align: center;
+      border: 1px solid red;
+    }
+</style>
+
+<body>
+    <h1>Game of memory with words</h1>
+    <div id ="inicio">
+    <p>Let's train your visual memory with this game.</p>
+    <p>
+        <label>Choose how many words you want to play with: </label>
+        <select id="quantNumbers">
+            <option value="5" selected>5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+        </select>
+        <button type="button" id = "play" onclick="play()">Play</button>
+        <button type="button" id = "check" disabled onclick="check()">Check</button>
+        <button type="button" id = "restart" onclick="restart()">Restart</button>
+    </p>
+    </div>
+
+    <div id = "numbers">
+
+    </div>
+    <hr>
+    <div id = "reply">
+
+    </div>
+    <div>
+        <p id = "output"></p>
+    </div>
+
+    <script src = "./array.js"></script>
+    <script>
+        const QUANTITY_NUMBERS = document.getElementById("quantNumbers");
+        const NUMBERS = document.getElementById("numbers");
+        const array = [];
+        let quantity;
+        const LENGTH = words.length - 1;
+
+        function play(){
+            NUMBERS.innerHTML = "";
+
+            quantity = parseInt(QUANTITY_NUMBERS.value);
+
+            for (let i = 0; i < quantity; i++){
+                let num = Math.floor(Math.random() * LENGTH +1);
+                array.push(words[num]);
+                let values = document.createElement("span");
+                values.innerHTML = words[num];
+                NUMBERS.appendChild(values);
+
+            }
+
+            setTimeout(() => {
+                NUMBERS.style.display = "none";
+                document.getElementById("play").disabled = true;
+                showInput();
+            }, 5000);
+               
+        }
+
+        function showInput(){
+            const REPLYDIV = document.getElementById("reply");
+            REPLYDIV.innerHTML = '';
+
+            for (let i = 0; i < quantity; i++){
+                let input = document.createElement("input");
+                input.type = "text";
+                input.id = "num"+i;
+                REPLYDIV.appendChild(input);
+            }
+
+            document.getElementById("check").disabled = false;
+        }
+
+        function check(){
+            const inputs = document.querySelectorAll("#reply input");
+            let correct = 0;
+            let entries = 0;
+            let inputId = 0;
+            
+            for(let i = 0; i < quantity; i++){
+                inputId = "num" +1;
+                entries = parseInt(document.getElementById(inputId).value);
+                if (entries === array[i]){
+                    correct++;
+                }
+            }
+
+            document.getElementById("output").innerText = `Correct: ${correct} of ${array.length}`;
+            document.getElementById("numbers").style.display = "block";
+            document.getElementById("check").disabled = true;
+        
+        }
+
+        function restart(){
+            array.length = 0;
+            quantity = 0;
+            document.getElementById("numbers").innerHTML = "";
+            document.getElementById("numbers").style.display = "block";
+            document.getElementById("reply").innerHTML = "";
+            document.getElementById("output").innerText = "";
+            document.getElementById("check").disabled = true;
+            document.getElementById("play").disabled = false;
+        }
+
+    </script>
+
+</html>
